@@ -24,7 +24,7 @@ This project aims to securely manage, streamline, and perform analysis on the st
 
 ## 💿 Project Datasets:
 
-* [Trending YouTube Video Statistics] (https://www.kaggle.com/datasets/datasnaek/youtube-new)
+* [Trending YouTube Video Statistics](https://www.kaggle.com/datasets/datasnaek/youtube-new)
 
 ---
 
@@ -69,7 +69,7 @@ This project aims to securely manage, streamline, and perform analysis on the st
 ----
 
 ## 📜 Resources
-* [Kaggle Dataset] (https://www.kaggle.com/datasets/datasnaek/youtube-new)
+* [Kaggle Dataset](https://www.kaggle.com/datasets/datasnaek/youtube-new)
 * [YouTube Data Analysis | END TO END DATA ENGINEERING PROJECT](https://www.youtube.com/watch?v=yZKJFKu49Dk&list=PLBJe2dFI4sguF2nU6Z3Od7BX8eALZN3mU&ab_channel=DarshilParmar)
 
 ---
