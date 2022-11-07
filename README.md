@@ -18,7 +18,7 @@ This project aims to securely manage, streamline, and perform analysis on the st
 
 > Data Flow Architecture
 <p align="center">
-  <img width=40% height=40%" src="/imgs/Data-Flow-Architecture.png">
+  <img width=80% height=80%" src="/imgs/Data-Flow-Architecture.png">
 
 ---
 
