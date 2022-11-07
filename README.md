@@ -1,14 +1,10 @@
 # YouTube Trends Analysis ETL using AWS
-> This repository contains all of my code for Sparkify - Data Modeling with Postgres project (Udacity Data Engineering Expert Track)
->
-> In this project, I created a Postgres database with fact and dimension tables for a star schema for a specific analytic focus, which is to analyse Sparkify's collected data on songs and user activity on their new music streaming app. Then, using Python and SQL, I created an ETL pipeline that transfers data from JSON files in two local directories into these tables in Postgres.
+
+> In this project, I evaluated and prepared Kaggle's Trending YouTube Video Statistics data for use.
 
 ## 📕 Table Of Contents
 * [Introduction](#-introduction)
-* [Project Description](#-project-description)
 * [Project Datasets](#-project-datasets)
-* [Database Schema](#-database-schema)
-* [Prerequisites](#-prerequisites)
 * [Project Files](#-project-files)
 * [Project Steps](#-project-steps)
 * [Tools and Technologies](#-tools-and-technologies)
@@ -16,100 +12,65 @@
 ---
 
 ## 🪄 Introduction
-A startup called Sparkify wants to analyze the data they've been collecting on songs and user activity on their new music streaming app. The analytics team is particularly interested in understanding what songs users are listening to. Currently, they don't have an easy way to query their data, which resides in a directory of JSON logs on user activity on the app, as well as a directory with JSON metadata on the songs in their app.
 
-They'd like a data engineer to create a Postgres database with tables designed to optimize queries on song play analysis, and bring you on the project. Your role is to create a database schema and ETL pipeline for this analysis. You'll be able to test your database and ETL pipeline by running queries given to you by the analytics team from Sparkify and compare your results with their expected results.
+Many problems exist when deploying or transferring analytics to the cloud. Differences in features between on-premises and cloud data platforms, security, and governance are all technical concerns. The danger of moving on-premises data into the cloud has prompted organizations to limit cloud analytics initiatives, especially in regulated industries where data protection is crucial. 
+This project aims to securely manage, streamline, and perform analysis on the structured and semi-structured YouTube videos data based on the video categories and the trending metrics.
 
----
-
-## 📝 Project Description
-
-In this project, you'll apply what you've learned on data modeling with Postgres and build an ETL pipeline using Python. To complete the project, you will need to define fact and dimension tables for a star schema for a particular analytic focus, and write an ETL pipeline that transfers data from files in two local directories into these tables in Postgres using Python and SQL.
+> Data Flow Architecture
+<p align="center">
+  <img width=40% height=40%" src="/imgs/Data-Flow-Architecture.png">
 
 ---
 
 ## 💿 Project Datasets:
 
-- https://www.kaggle.com/datasets/datasnaek/youtube-new
-
-![log-data](https://user-images.githubusercontent.com/46838441/191114096-960d74b7-2745-4006-bef7-b5f616e1113f.png)
+* [Trending YouTube Video Statistics] (https://www.kaggle.com/datasets/datasnaek/youtube-new)
 
 ---
 
-## 🗺️ Database Schema
 
-After examining the Log and Song JSON files, I created a Star schema (shown below) that include one Fact table (songplays) and 4 Dimension tables.
+## ⚡ Project Steps
 
-- Fact Table
-  - ```songplays``` records in log data associated with song plays i.e. records with page 'NextSong'
-    - songplay_id, start_time, user_id, level, song_id, artist_id, session_id, location, user_agent.
-- Dimension Tables
-  - ```users``` users in the app
-    - user_id, first_name, last_name, gender, level
-  - ```songs``` songs in music database
-    - song_id, title, artist_id, year, duration
-  - ```artists``` artists in music database
-    - artist_id, name, location, latitude, longitude
-  - ```time``` timestamps of records in songplays broken down into specific units
-    - start_time, hour, day, week, month, year, weekday
+- 1 - Uploading data from a local machine to an S3 bucket using AWS CLI commands while attempting to keep file organization. Separate folders were created for the JSON and CSV files.
+> s3_cli_commands.sh
+- 2 - Using AWS Glue Catalog to crawl data from raw bucket JSON and CSV files, which will be stored in a separate database.
+- 3 - If problems arise as a result of data in JSON format, write a Python function using AWS Lambda to clean them up and convert them to parquet format.
+> lambda_function.py
+- 4 - Adding a trigger to this Lambda function to run whenever new data is added to the S3 bucket, and the output was saved in a new database in Athena.
+- 5 - Using AWS Glue ETL, I converted the CSV files to parquet format as well.
+> ETL_clean_data.py
+<p align="center">
+  <img width=40% height=40%" src="/imgs/ETL-Cleaning.png">
 
-<img src="erd-diagram.png" alt="ERD Diagram" width="800"/>
+- 6 - Creating a new Glue Crawler to crawl the clean data into the database.
+- 7 - After all of the clean data from the parquet files (converted from CSV and JSON files) is in the same database, create an ETL job in AWS Glue Studio to join both tables and store it in a separate S3 bucket for BI purposes.
+> ETL_joining_data.py
+<p align="center">
+  <img width=40% height=40%" src="/imgs/ETL-Joining_Data.png">
 
----
-
-## 🚧 Prerequisites
-
-This project makes the folowing assumptions:
-
-* Python 3 is available
-* `pandas` and `psycopg2` are available
-* A PosgreSQL database is available on localhost
+- 8 - The data is now ready to be used for building dashboards out of it.
 
 ---
 
 ## 📚 Project Files:
 
-- ```test.ipynb``` displays the first few rows of each table to check the database.
-- ```create_tables.py```drops and creates the database and its tables.
-- ```etl.ipynb``` reads and processes a single file from song_data and log_data and loads the data the tables.
-- ```etl.py``` reads and processes files from song_data and log_data and loads them into the tables.
-- ```sql_queries.py``` contains all sql queries.
+- ```s3_cli_command.sh``` AWS cli commands to upload the raw data into S3 Bucket
+- ```lambda_function.py```AWS lambda function to convert JSON into PARQUET format
+- ```ETL_clean_data.py``` ETL script to clean data and apply mapping transformation into them
+- ```ETL_joining_data.py``` ETL script to join both tables and storing it in a separate S3 bucket
 
 ---
 
-## ⚡ Project Steps
-> NOTE: You will not be able to run test.ipynb, etl.ipynb, or etl.py until you have run create_tables.py at least once to create the sparkifydb database, which these other files connect to.
-
-- 1 - Create database star schema optimized for queries on song play analysis.
-- 2 - Prepare the SQL queries: create, drop, and select statements that you will use.
-> sql_queries.py
-- 3 - Create the Postgres database.
-> Remember that you have to change connection credentials in project files (change user and password).
-```
-conn = psycopg2.connect("host=127.0.0.1 dbname=sparkifydb user=postgres password=123456")
-```
-- 4- Develop the ETL process.
-> etl.ipynb
-- 5- Build ETL Pipeline.
-> Use what you've completed in `etl.ipynb` to complete `etl.py`
->
-> Remember to run `create_tables.py` before running `etl.py` to reset your tables
-- 6- Test the results.
-> test.ipynb
-
----
 ## 🔧 Tools and Technologies:
 - Python 3.
-- PostgreSQL server.
 - SQL.
-- Jupyter Notebook.
-- Pandas, NumPy, Psycopg2 Python Libraries.
+- AWS S3, AWS Glue, QuickSight, AWS Lambda, AWS Athena, AWS IAM
 
 ----
 
 ## 📜 Resources
-* [data-modeling-with-postgres](https://github.com/christophersmith/data-modeling-with-postgres)
-* [Sparkify---Data-Modeling-with-Postgres](https://github.com/Dina-Hosny/Sparkify---Data-Modeling-with-Postgres)
+* [Kaggle Dataset] (https://www.kaggle.com/datasets/datasnaek/youtube-new)
+* [YouTube Data Analysis | END TO END DATA ENGINEERING PROJECT](https://www.youtube.com/watch?v=yZKJFKu49Dk&list=PLBJe2dFI4sguF2nU6Z3Od7BX8eALZN3mU&ab_channel=DarshilParmar)
 
 ---
 ## ✨ Contribution
