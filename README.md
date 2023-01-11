@@ -1,6 +1,14 @@
 # YouTube Trends Analysis ETL using AWS
 
-> In this project, I evaluated and prepared Kaggle's Trending YouTube Video Statistics data for use.
+The goal of this project is to extract, transform, and load (ETL) data on trending YouTube videos from Kaggle's dataset. The data will be stored in AWS for further analysis and visualization.
+
+The first step in this project will be to extract the data from the Kaggle dataset and store it in an S3 bucket on AWS. Next, the data will be transformed to ensure it is in the proper format for analysis. This will include cleaning the data, handling missing values, and converting data types.
+
+After the data has been transformed, it will be loaded into a relational database (such as RDS) or a data warehousing service (such as Redshift) on AWS. This will make it easily accessible for analysis and visualization.
+
+Once the data is stored on AWS, the project will focus on analyzing the data to gain insights on trends in YouTube video views, likes, and comments. This could include identifying patterns in the data, such as which types of videos are trending or which countries have the most views. Additionally, data visualization tools such as QuickSight can be used to create interactive visualizations that display these trends.
+
+Overall, this project will demonstrate how to use AWS for ETL and storing large datasets for further analysis. Additionally, it can provide interesting insights and trend on what type of videos and content is popular on YouTube.
 
 ## 📕 Table Of Contents
 * [Introduction](#-introduction)
